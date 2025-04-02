@@ -13,7 +13,7 @@ const getSingleUser = async(id:string)=>{
     const result = await User.findById(id)
     return result
 }
-const updateUser = async (id:string)=>{
+const updateUser = async (id:string,data: IUser)=>{
     const result = await  User.findByIdAndUpdate(id, {role: 'admin'}, {new: true})
     return result
 }
