@@ -24,22 +24,21 @@ const getAllMedicines = async (searchTerm?: string) => {
 };
 
 // Get a Medicine by ID
-const getMedicineById = async (MedicineId: string) => {
-
-    const Medicine = await medicine.findById(MedicineId);
+const getMedicineById = async (medicineId: string) => {
+    const Medicine = await medicine.findById(medicineId);
 
     return Medicine;
 };
 
 // Update a Medicine
-const updateMedicine = async (MedicineId: string, updates: Partial<IMedicine>) => {
-    const updatedMedicine = await medicine.findByIdAndUpdate(MedicineId, updates, { new: true });
+const updateMedicine = async (medicineId: string, updates: Partial<IMedicine>) => {
+    const updatedMedicine = await medicine.findByIdAndUpdate(medicineId, updates, { new: true });
     return updatedMedicine;
 };
 
 // Delete a Medicine
-const deleteMedicine = async (MedicineId: string) => {
-    const deletedMedicine = await medicine.findByIdAndDelete(MedicineId);
+const deleteMedicine = async (medicineId: string) => {
+    const deletedMedicine = await medicine.findByIdAndDelete(medicineId);
     return deletedMedicine;
 };
 

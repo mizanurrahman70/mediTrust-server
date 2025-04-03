@@ -34,8 +34,8 @@ const getAllMedicines = async (req: Request, res: Response,next:NextFunction)=> 
 // Get a Medicine by ID
 const getMedicineById = async (req: Request, res: Response,next:NextFunction)=> {
   try {
-    const { MedicineId } = req.params;
-    const Medicine = await MedicineService.getMedicineById(MedicineId);
+    const { medicineId } = req.params;
+    const Medicine = await MedicineService.getMedicineById(medicineId);
     if (!Medicine) {
       console.log(res.status(404).json({ message: "Medicine not found", success: false }));;
     }
@@ -49,7 +49,7 @@ const getMedicineById = async (req: Request, res: Response,next:NextFunction)=> 
 // Update a Medicine
 const updateMedicine = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
   try {
-    const MedicineId = req.params.MedicineId;
+    const MedicineId = req.params.medicineId;
     const updates = req.body;
     const updatedMedicine = await MedicineService.updateMedicine(MedicineId, updates);
     if (updatedMedicine) {
@@ -72,7 +72,7 @@ const updateMedicine = async (req: Request, res: Response,next:NextFunction): Pr
 // Delete a Medicine
 const deleteMedicine = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
   try {
-    const MedicineId = req.params.MedicineId;
+    const MedicineId = req.params.medicineId;
     const deletedMedicine = await MedicineService.deleteMedicine(MedicineId);
     if (deletedMedicine) {
       res.status(200).json({
