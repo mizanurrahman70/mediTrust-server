@@ -68,7 +68,7 @@ const deleteOrder = async (req: Request, res: Response,next:NextFunction): Promi
     const deletedOrder = await OrderServices.deleteOrder(orderId);
     if (deletedOrder) {
       res.status(200).json({
-        message: "Medicine deleted successfully",
+        message: "Order deleted successfully",
         status: true,
         data: deletedOrder,
       });
