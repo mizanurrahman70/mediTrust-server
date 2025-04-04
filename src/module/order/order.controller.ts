@@ -82,9 +82,33 @@ const deleteOrder = async (req: Request, res: Response,next:NextFunction): Promi
   next(error)
   }
 };
+const updateOrder = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
+    try{
+        const orderId = req.params.orderId; 
+        const updates = req.body;
+        const updatedOrder = await OrderServices.updateOrder(orderId, updates); 
+        if (updatedOrder) {
+          res.status(200).json({
+            message: "Order updated successfully",
+            status: true,
+            data: updatedOrder,
+          });
+        } else {
+          res.status(404).json({
+            message: "Order not found",
+            status: false,
+          });
+        }
+      } catch (error) {
+        next(error)
+      }
+
+    }
+
 export const OrderControllers = {
   createOrder,
   totalRevenue,
   getAllOrders,
-  deleteOrder
+  deleteOrder,
+  updateOrder
 }

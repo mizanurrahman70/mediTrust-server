@@ -85,9 +85,14 @@ const deleteOrder = async (orderId: string) => {
   const deleteOrder = await OrderModel.findByIdAndDelete(orderId);
   return deleteOrder;
 };
+const updateOrder = async (orderId: string, updates: Partial<Order>) => {
+  const updateOrder =await OrderModel.findByIdAndUpdate(orderId, updates, { new: true });
+  return updateOrder;
+}
 export const OrderServices = {
   createOrder,
   calculateRevenue,
   getAllOrders,
   deleteOrder,
+  updateOrder,
 };
