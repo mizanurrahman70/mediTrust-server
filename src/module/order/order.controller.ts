@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import catchAsync from "../../utilits/catchAsync";
 import sendResponse from "../../utilits/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { OrderResponse } from "./order.interface";
 
 // Create an Order
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
@@ -53,13 +54,13 @@ const totalRevenue = async (req: Request, res: Response, next: NextFunction) => 
 //get all orders
 const getAllOrders = catchAsync(async (req, res) => {
   const order = await OrderServices.getAllOrders();
-
-  sendResponse(res, {
+   const response :OrderResponse<typeof order> = {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Orders retrieved successfully',
     data: order,
-  });
+}
+sendResponse(res, response);
 });
 const deleteOrder = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
   try {

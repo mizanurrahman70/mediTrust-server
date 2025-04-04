@@ -8,3 +8,9 @@ export interface Order {
     paymentMethod: string;
     deliveryOption: string;
 }
+export interface OrderResponse<T> {
+    statusCode: number;
+    message: string;
+    success: boolean;
+    data: T;
+}
