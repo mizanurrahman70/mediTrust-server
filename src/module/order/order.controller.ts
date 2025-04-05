@@ -120,5 +120,6 @@ export const OrderControllers = {
   totalRevenue,
   getAllOrders,
   deleteOrder,
-  updateOrder
+  updateOrder,
+  verifyPayment,
 }
