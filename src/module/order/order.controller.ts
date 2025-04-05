@@ -18,11 +18,11 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
         quantity: item.quantity,
       }));
    
-
+    const client_ip = req.headers["x-forwarded-for"]?.toString().split(",")[0] || req.socket.remoteAddress;
     const result = await OrderServices.createOrder({
         userId: Order.userId,
         medicines: productDetails,
-    });
+    }, client_ip || 'unknown');
 
     res.status(201).json({
       message: "Order created successfully",
@@ -49,7 +49,16 @@ const totalRevenue = async (req: Request, res: Response, next: NextFunction) => 
   }
 }
 
-
+const verifyPayment = catchAsync(async (req, res) => {
+  const order = await OrderServices.verifyPayment(req.query.order_id as string);
+  const response :OrderResponse<typeof order> = {
+    statusCode: StatusCodes.CREATED,
+    success: true,
+    message: 'Orders retrieved successfully',
+    data: order,
+}
+sendResponse(res, response);
+});
 
 //get all orders
 const getAllOrders = catchAsync(async (req, res) => {
