@@ -11,6 +11,7 @@ export const createMedicineValidationSchema = z.object({
       contact: z.string({ required_error: "Manufacture contact is require" }),
     }),
     description: z.string({ required_error: "Description is required" }), // Description should not be empty
+    symptoms: z.string({ required_error: "Symptoms is required" }), // Description should not be empty
     quantity: z.number().int().nonnegative("Quantity must be a positive number"), // Ensures quantity is a non-negative integer
     stockAvailability: z.boolean().default(true),
     expiryDate: z.string({ required_error: "Expiry Date is required" }),

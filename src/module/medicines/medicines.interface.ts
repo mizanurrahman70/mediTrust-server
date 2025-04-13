@@ -9,6 +9,7 @@ export interface IMedicine {
     name: string;
     contact: string;
   };
+  symptoms: string;
   expiryDate: Date;
   image: string;
 }
