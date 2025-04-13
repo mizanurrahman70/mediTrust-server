@@ -15,39 +15,41 @@ const createMedicine = async (req: Request, res: Response, next: NextFunction): 
   }
 };
 
-
 // Get all Medicines
-const getAllMedicines = async (req: Request, res: Response,next:NextFunction)=> {
+const getAllMedicines = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const searchTerm = req.query.searchTerm as string;
-    const Medicines = await MedicineService.getAllMedicines(searchTerm);
+    const query = req.query;
+
+    const Medicines = await MedicineService.getAllMedicines(query);
     res.status(200).json({
       message: "Medicines retrieved successfully",
       success: true,
       data: Medicines,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 // Get a Medicine by ID
-const getMedicineById = async (req: Request, res: Response,next:NextFunction)=> {
+const getMedicineById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { medicineId } = req.params;
     const Medicine = await MedicineService.getMedicineById(medicineId);
     if (!Medicine) {
-      console.log(res.status(404).json({ message: "Medicine not found", success: false }));;
+      console.log(res.status(404).json({ message: "Medicine not found", success: false }));
     }
 
-    res.status(200).json({ message: "Medicine retrieved successfully", success: true, data: Medicine });
+    res
+      .status(200)
+      .json({ message: "Medicine retrieved successfully", success: true, data: Medicine });
   } catch (error) {
-   next(error)
+    next(error);
   }
 };
 
 // Update a Medicine
-const updateMedicine = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
+const updateMedicine = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const MedicineId = req.params.medicineId;
     const updates = req.body;
@@ -65,12 +67,12 @@ const updateMedicine = async (req: Request, res: Response,next:NextFunction): Pr
       });
     }
   } catch (error) {
- next(error)
+    next(error);
   }
 };
 
 // Delete a Medicine
-const deleteMedicine = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
+const deleteMedicine = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const MedicineId = req.params.medicineId;
     const deletedMedicine = await MedicineService.deleteMedicine(MedicineId);
@@ -87,7 +89,7 @@ const deleteMedicine = async (req: Request, res: Response,next:NextFunction): Pr
       });
     }
   } catch (error) {
-  next(error)
+    next(error);
   }
 };
 
