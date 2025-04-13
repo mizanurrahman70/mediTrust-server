@@ -1,9 +1,10 @@
 import { IMedicine } from "./medicines.interface";
-import medicine from "./medicines.model";
+import Medicine from "./medicines.model";
 
 // Create a Medicine
 const createMedicine = async (payload: IMedicine) => {
-    const result = await medicine.create(payload);
+    const result = await Medicine.create(payload);
+    console.log(result);
     return result;
 };
 
@@ -19,26 +20,26 @@ const getAllMedicines = async (searchTerm?: string) => {
             ],
         };
     }
-    const Medicines = await medicine.find(query);
+    const Medicines = await Medicine.find(query);
     return Medicines;
 };
 
 // Get a Medicine by ID
 const getMedicineById = async (medicineId: string) => {
-    const Medicine = await medicine.findById(medicineId);
+    const res = await Medicine.findById(medicineId);
 
-    return Medicine;
+    return res;
 };
 
 // Update a Medicine
 const updateMedicine = async (medicineId: string, updates: Partial<IMedicine>) => {
-    const updatedMedicine = await medicine.findByIdAndUpdate(medicineId, updates, { new: true });
+    const updatedMedicine = await Medicine.findByIdAndUpdate(medicineId, updates, { new: true });
     return updatedMedicine;
 };
 
 // Delete a Medicine
 const deleteMedicine = async (medicineId: string) => {
-    const deletedMedicine = await medicine.findByIdAndDelete(medicineId);
+    const deletedMedicine = await Medicine.findByIdAndDelete(medicineId);
     return deletedMedicine;
 };
 
