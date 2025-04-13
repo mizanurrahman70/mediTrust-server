@@ -10,7 +10,7 @@ const createMedicine = async (payload: IMedicine) => {
 
 // Get all Medicines
 const getAllMedicines = async (query: Record<string, unknown>) => {
-  const medicineQuery = new QueryBuilder(Medicine.find(), query)
+    const medicineQuery = new QueryBuilder(Medicine.find(), query)
     .search(["name", "symptoms"])
     .fields()
     .filter()
@@ -24,9 +24,9 @@ const getAllMedicines = async (query: Record<string, unknown>) => {
 
 // Get a Medicine by ID
 const getMedicineById = async (medicineId: string) => {
-  const res = await Medicine.findById(medicineId);
+  const result = await Medicine.findById(medicineId);
 
-  return res;
+  return result;
 };
 
 // Update a Medicine
