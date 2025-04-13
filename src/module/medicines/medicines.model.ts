@@ -13,6 +13,7 @@ const medicineSchema = new Schema({
     type: Number,
     required: true,
   },
+  quantity: { type: Number, required: true },
   stockAvailability: {
     type: Boolean,
     required: true,
@@ -31,6 +32,7 @@ const medicineSchema = new Schema({
       required: true,
     },
   },
+  image: { type: String, required: true },
   expiryDate: {
     type: Date,
     required: true,
