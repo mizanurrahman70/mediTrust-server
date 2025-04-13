@@ -13,6 +13,6 @@ export const createMedicineValidationSchema = z.object({
     description: z.string({ required_error: "Description is required" }), // Description should not be empty
     quantity: z.number().int().nonnegative("Quantity must be a positive number"), // Ensures quantity is a non-negative integer
     stockAvailability: z.boolean().default(true),
-    expiryDate: z.date({ required_error: "Expiry Date" }),
+    expiryDate: z.string({ required_error: "Expiry Date is required" }),
   }),
 });

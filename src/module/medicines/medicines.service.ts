@@ -4,7 +4,6 @@ import Medicine from "./medicines.model";
 // Create a Medicine
 const createMedicine = async (payload: IMedicine) => {
     const result = await Medicine.create(payload);
-    console.log(result);
     return result;
 };
 
