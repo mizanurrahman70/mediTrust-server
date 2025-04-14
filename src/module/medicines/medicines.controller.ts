@@ -38,7 +38,7 @@ const getMedicineById = async (req: Request, res: Response, next: NextFunction) 
     const { medicineId } = req.params;
     const Medicine = await MedicineService.getMedicineById(medicineId);
     if (!Medicine) {
-      console.log(res.status(404).json({ message: "Medicine not found", success: false }));
+      res.status(404).json({ message: "Medicine not found", success: false });
     }
 
     res
