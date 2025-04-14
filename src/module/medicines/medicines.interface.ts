@@ -8,6 +8,7 @@ export interface IMedicine {
   manufacturerDetails: {
     name: string;
     contact: string;
+    location: string;
   };
   symptoms: string;
   expiryDate: Date;
