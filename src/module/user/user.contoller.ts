@@ -7,7 +7,8 @@ import { userService } from './user.service'
 
 
 const getUser = catchAsync(async (req, res) => {
-  const result = await userService.getUser()
+  const query = req.query
+  const result = await userService.getUser(query)
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
