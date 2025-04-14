@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import MedicinesModel from "../medicines/medicines.model";
-import { User } from "../user/user.model";
+import User from "../user/user.model";
+
 import { Order } from "./order.interface";
 import OrderModel from './order.model';
 
