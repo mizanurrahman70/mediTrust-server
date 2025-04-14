@@ -8,6 +8,7 @@ const createMedicine = async (req: Request, res: Response, next: NextFunction): 
     const result = await MedicineService.createMedicine(Medicine);
     res.status(201).json({
       message: "Medicine created successfully",
+      success: true,
       data: result,
     });
   } catch (error) {
@@ -57,13 +58,13 @@ const updateMedicine = async (req: Request, res: Response, next: NextFunction): 
     if (updatedMedicine) {
       res.status(200).json({
         message: "Medicine updated successfully",
-        status: true,
+        success: true,
         data: updatedMedicine,
       });
     } else {
       res.status(404).json({
         message: "Medicine not found",
-        status: false,
+        success: false,
       });
     }
   } catch (error) {
@@ -79,13 +80,14 @@ const deleteMedicine = async (req: Request, res: Response, next: NextFunction): 
     if (deletedMedicine) {
       res.status(200).json({
         message: "Medicine deleted successfully",
-        status: true,
+        success: true,
         data: deletedMedicine,
       });
     } else {
       res.status(404).json({
         message: "Medicine not found",
-        status: false,
+        success: false,
+        data: null,
       });
     }
   } catch (error) {
