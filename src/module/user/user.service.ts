@@ -25,6 +25,10 @@ const changeUserStatus = async (id: string, status: string) => {
   const result = await User.findByIdAndUpdate(id, { status }, { new: true });
   return result;
 };
+const changeUserRole = async (id: string, role: string) => {
+  const result = await User.findByIdAndUpdate(id, { role }, { new: true });
+  return result;
+};
 const deleteUser = async (id: string) => {
   const result = await User.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
   return result;
@@ -35,4 +39,5 @@ export const userService = {
   updateUser,
   deleteUser,
   changeUserStatus,
+  changeUserRole
 };

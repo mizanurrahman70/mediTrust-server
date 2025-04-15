@@ -6,24 +6,27 @@ import catchAsync from "../../utilits/catchAsync";
 import sendResponse from "../../utilits/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { OrderResponse } from "./order.interface";
+import { orderValidationSchema } from "./order.validation";
 
 // Create an Order
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const Order = req.body;
+    const validatedOrder = orderValidationSchema.parse(req.body.data);
 
-    const productDetails = Order.items.map((item: any) => ({
-        medicine: mongoose.Types.ObjectId.isValid(item.medicine)
-          ? new mongoose.Types.ObjectId(item.medicine)
-          : null,
-        quantity: item.quantity,
-      }));
-   
+    const medicineDetails = validatedOrder.medicine.map((item: any) => ({
+      medicine: new mongoose.Types.ObjectId(item.medicine),
+      quantity: item.quantity,
+    }));
+
+    const client_ip =
+      req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
+      req.socket.remoteAddress;
+      console.log(client_ip);
 
     const result = await OrderServices.createOrder({
-        userId: Order.userId,
-        medicines: productDetails,
-    });
+      userId: validatedOrder.userId,
+      medicine: medicineDetails,
+    }, client_ip || 'unknown');
 
     res.status(201).json({
       message: "Order created successfully",
@@ -32,8 +35,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     });
   } catch (error) {
     next(error);
-  }
-};
+  }}
 
 // Get Total Revenue
 const totalRevenue = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { userController } from "./user.contoller";
 import validateRequest from "../../middlewares/validateRequest";
-import { changeUserStatusValidationSchema } from "./user.validation";
+import { changeUserRoleValidationSchema, changeUserStatusValidationSchema } from "./user.validation";
 
 const userRouter = Router();
 userRouter.get("/", userController.getUser);
@@ -11,6 +11,11 @@ userRouter.put(
   "/change-status/:userId",
   validateRequest(changeUserStatusValidationSchema),
   userController.changeUserStatus
+);
+userRouter.put(
+  "/change-role/:userId",
+  validateRequest(changeUserRoleValidationSchema),
+  userController.changeUserRole
 );
 userRouter.delete("/:userId", userController.deleteUser);
 
