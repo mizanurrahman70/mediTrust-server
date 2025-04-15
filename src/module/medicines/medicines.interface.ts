@@ -1,9 +1,8 @@
-export interface IMedicine {
+export interface TMedicine {
   name: string;
   description: string;
   price: number;
   quantity: number;
-  stockAvailability: boolean;
   requiredPrescription: boolean;
   manufacturerDetails: {
     name: string;

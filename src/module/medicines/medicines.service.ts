@@ -1,16 +1,16 @@
 import QueryBuilder from "../../builder/QueryBuilder";
-import { IMedicine } from "./medicines.interface";
+import { TMedicine } from "./medicines.interface";
 import Medicine from "./medicines.model";
 
 // Create a Medicine
-const createMedicine = async (payload: IMedicine) => {
+const createMedicine = async (payload: TMedicine) => {
   const result = await Medicine.create(payload);
   return result;
 };
 
 // Get all Medicines
 const getAllMedicines = async (query: Record<string, unknown>) => {
-    const medicineQuery = new QueryBuilder(Medicine.find(), query)
+  const medicineQuery = new QueryBuilder(Medicine.find(), query)
     .search(["name", "symptoms"])
     .fields()
     .filter()
@@ -30,7 +30,7 @@ const getMedicineById = async (medicineId: string) => {
 };
 
 // Update a Medicine
-const updateMedicine = async (medicineId: string, updates: Partial<IMedicine>) => {
+const updateMedicine = async (medicineId: string, updates: Partial<TMedicine>) => {
   const updatedMedicine = await Medicine.findByIdAndUpdate(medicineId, updates, { new: true });
   return updatedMedicine;
 };
