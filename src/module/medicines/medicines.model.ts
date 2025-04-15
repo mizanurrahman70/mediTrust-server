@@ -14,10 +14,6 @@ const medicineSchema = new Schema({
     required: true,
   },
   quantity: { type: Number, required: true },
-  stockAvailability: {
-    type: Boolean,
-    default: true
-  },
   requiredPrescription: {
     type: Boolean,
     required: true,

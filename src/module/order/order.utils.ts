@@ -1,5 +1,6 @@
-import Shurjopay, { PaymentResponse, VerificationResponse } from "shurjopay";
-import config from "../../config/index";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Shurjopay, { PaymentResponse, VerificationResponse } from 'shurjopay';
+import config from '../../config';
 
 const shurjopay = new Shurjopay();
 
@@ -8,35 +9,34 @@ shurjopay.config(
   config.sp.sp_username!,
   config.sp.sp_password!,
   config.sp.sp_prefix!,
-  config.sp.sp_return_url!
+  config.sp.sp_return_url!,
 );
 
-// Make Payment Async Function
-const makePaymentAsync = async (paymentPayload: any): Promise<PaymentResponse> => {
+const makePaymentAsync = async (
+  paymentPayload: any,
+): Promise<PaymentResponse> => {
   return new Promise((resolve, reject) => {
     shurjopay.makePayment(
       paymentPayload,
-      (response: PaymentResponse) => resolve(response),
-      (error: any) => reject(error)
+      (response) => resolve(response),
+      (error) => reject(error),
     );
   });
 };
 
-// Verify Payment Async Function
-const verifyPaymentAsync = async (order_id: string): Promise<VerificationResponse[]> => {
+const verifyPaymentAsync = (
+  order_id: string,
+): Promise<VerificationResponse[]> => {
   return new Promise((resolve, reject) => {
     shurjopay.verifyPayment(
       order_id,
-      (response: VerificationResponse[]) => resolve(response),
-      (error: any) => reject(error)
+      (response) => resolve(response),
+      (error) => reject(error),
     );
   });
 };
 
-// Export Utilities
 export const orderUtils = {
   makePaymentAsync,
-  verifyPaymentAsync
+  verifyPaymentAsync,
 };
-
-

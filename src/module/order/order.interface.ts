@@ -1,11 +1,30 @@
 import type { Types } from "mongoose";
-export interface Order {
+
+export interface TProduct {
+  medicine: Types.ObjectId;
+  quantity: number;
+  prescription: string;
+}
+export interface TDeliveryInfo {
+  name: string;
+  phoneNumber: string;
+  localAddress: string;
+  city: string;
+  district: string;
+  thana: string;
+  postalCode: number;
+}
+export interface TOrder {
   id: string;
-  userId: Types.ObjectId;
-  items: { medicine: Types.ObjectId; quantity: number }[];
+  user: Types.ObjectId;
+  products: TProduct[];
   totalPrice: number;
+  status: "Pending" | "Reject" | "Processing" | "Shipped" | "Completed";
   rejectNotes?: string;
-  status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";
+  deliveryInfo?: TDeliveryInfo;
+  deliveryOptions?: "Standard" | "Express" | "Pickup from Store";
+  paymentMethod: "COD" | "surjopay";
+  paymentStatus: "unpaid" | "paid";
   transaction: {
     id: string;
     transactionStatus: string;

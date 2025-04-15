@@ -1,32 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { OrderServices } from "./order.service";
-import mongoose from "mongoose";
 import catchAsync from "../../utilits/catchAsync";
 import sendResponse from "../../utilits/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { OrderResponse } from "./order.interface";
-import { orderValidationSchema } from "./order.validation";
 
 // Create an Order
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const validatedOrder = orderValidationSchema.parse(req.body.data);
-
-    const medicineDetails = validatedOrder.medicine.map((item: any) => ({
-      medicine: new mongoose.Types.ObjectId(item.medicine),
-      quantity: item.quantity,
-    }));
-
-    const client_ip =
-      req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
-      req.socket.remoteAddress;
-      console.log(client_ip);
-
-    const result = await OrderServices.createOrder({
-      userId: validatedOrder.userId,
-      medicine: medicineDetails,
-    }, client_ip || 'unknown');
+    const order = req.body;
+    const result = await OrderServices.createOrder(order, req.ip!);
 
     res.status(201).json({
       message: "Order created successfully",
@@ -35,7 +19,8 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     });
   } catch (error) {
     next(error);
-  }}
+  }
+};
 
 // Get Total Revenue
 const totalRevenue = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,32 +28,30 @@ const totalRevenue = async (req: Request, res: Response, next: NextFunction) => 
     const revenue = await OrderServices.calculateRevenue();
 
     res.status(200).json({
-      message: 'Revenue calculated successfully',
+      message: "Revenue calculated successfully",
       success: true,
       data: { totalRevenue: revenue },
     });
   } catch (error) {
     next(error);
   }
-}
-
-
+};
 
 //get all orders
 const getAllOrders = catchAsync(async (req, res) => {
   const order = await OrderServices.getAllOrders();
-   const response :OrderResponse<typeof order> = {
+  const response: OrderResponse<typeof order> = {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Orders retrieved successfully',
+    message: "Orders retrieved successfully",
     data: order,
-}
-sendResponse(res, response);
+  };
+  sendResponse(res, response);
 });
-const deleteOrder = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
+const deleteOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const orderId = req.params.orderId;
-    console.log(orderId,'orderId');
+    console.log(orderId, "orderId");
     const deletedOrder = await OrderServices.deleteOrder(orderId);
     if (deletedOrder) {
       res.status(200).json({
@@ -83,36 +66,35 @@ const deleteOrder = async (req: Request, res: Response,next:NextFunction): Promi
       });
     }
   } catch (error) {
-  next(error)
+    next(error);
   }
 };
-const updateOrder = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
-    try{
-        const orderId = req.params.orderId; 
-        const updates = req.body;
-        const updatedOrder = await OrderServices.updateOrder(orderId, updates); 
-        if (updatedOrder) {
-          res.status(200).json({
-            message: "Order updated successfully",
-            status: true,
-            data: updatedOrder,
-          });
-        } else {
-          res.status(404).json({
-            message: "Order not found",
-            status: false,
-          });
-        }
-      } catch (error) {
-        next(error)
-      }
-
+const updateOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const orderId = req.params.orderId;
+    const updates = req.body;
+    const updatedOrder = await OrderServices.updateOrder(orderId, updates);
+    if (updatedOrder) {
+      res.status(200).json({
+        message: "Order updated successfully",
+        status: true,
+        data: updatedOrder,
+      });
+    } else {
+      res.status(404).json({
+        message: "Order not found",
+        status: false,
+      });
     }
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const OrderControllers = {
   createOrder,
   totalRevenue,
   getAllOrders,
   deleteOrder,
-  updateOrder
-}
+  updateOrder,
+};
