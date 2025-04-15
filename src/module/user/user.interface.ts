@@ -1,15 +1,15 @@
-import { Model } from 'mongoose';
-import { USER_ROLE } from './user.constant';
+import { Model } from "mongoose";
+import { USER_ROLE } from "./user.constant";
 
 export type TUser = {
   _id?: string;
   name: string;
   email: string;
-  phone?:string;
+  phone?: string;
   password: string;
   passwordChangedAt?: Date;
-  status?: 'active' | 'deactivated';
-  role?: 'admin' | 'customer';
+  status?: "active" | "deactivated";
+  role?: "admin" | "customer";
   isDeleted?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -18,13 +18,10 @@ export type TUser = {
 export interface UserModel extends Model<TUser> {
   isUserExistByEmail(email: string): Promise<TUser>;
   isUserDeactivated(status: string): Promise<boolean>;
-  isPasswordMatch(
-    plainTextPassword: string,
-    hashPassword: string,
-  ): Promise<boolean>;
+  isPasswordMatch(plainTextPassword: string, hashPassword: string): Promise<boolean>;
   isJWTIssuedBeforePasswordChanged(
     passwordChangedTimestamp: Date,
-    jwtIssuedTimestamp: number,
+    jwtIssuedTimestamp: number
   ): boolean;
 }
 

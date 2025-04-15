@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { OrderServices } from "./order.service";
 import catchAsync from "../../utilits/catchAsync";
@@ -21,7 +20,16 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
-
+const getAllOrders = catchAsync(async (req, res) => {
+  const order = await OrderServices.getAllOrders(req?.query);
+  const response: OrderResponse<typeof order> = {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Orders retrieved successfully",
+    data: order,
+  };
+  sendResponse(res, response);
+});   
 // Get Total Revenue
 const totalRevenue = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -37,17 +45,6 @@ const totalRevenue = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-//get all orders
-const getAllOrders = catchAsync(async (req, res) => {
-  const order = await OrderServices.getAllOrders();
-  const response: OrderResponse<typeof order> = {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: "Orders retrieved successfully",
-    data: order,
-  };
-  sendResponse(res, response);
-});
 const deleteOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const orderId = req.params.orderId;
