@@ -19,6 +19,9 @@ export const userValidationSchema = z.object({
 export const changeUserStatusValidationSchema = z.object({
   body: z.object({ status: z.enum(["active", "deactivated"]) }),
 });
+export const changeUserRoleValidationSchema = z.object({
+  body: z.object({ role: z.enum(["admin", "customer"]) }),
+});
 
 // export const UserValidation = {
 //   userValidationSchema,
