@@ -38,6 +38,7 @@ userSchema.post("save", function (doc, next) {
   doc.password = "";
   next();
 });
+
 userSchema.pre("find", async function (next) {
   this.find({ isDeleted: { $ne: true } });
   next(); // optional
@@ -53,13 +54,20 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   const query = this.getQuery();
   const isStudentExist = await User.findOne(query);
   if (!isStudentExist) {
-    throw new AppError(404, "Student dose not exists");
+    throw new AppError(404, "User dose not exists");
   }
   next(); // optional
 });
+
+
 userSchema.statics.isUserExistByEmail = async function (email: string) {
   return await User.findOne({ email }).select("+password");
 };
+
+userSchema.statics.isUserExistByPhone = async function (phone: string) {
+  return await User.findOne({ phone }).select("+password");
+};
+
 userSchema.statics.isUserDeactivated = async function (status: string) {
   return status === "deactivated";
 };
