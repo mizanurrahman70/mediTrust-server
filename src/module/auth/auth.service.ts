@@ -94,6 +94,8 @@ const changePasswordIntoDB = async (
     );
   }
 
+  
+
   const updatedPassword = await bcrypt.hash(
     payload?.newPassword as string,
     Number(config.bcrypt_salt_rounds),
