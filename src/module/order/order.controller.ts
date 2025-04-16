@@ -29,7 +29,7 @@ const getAllOrders = catchAsync(async (req, res) => {
     data: order,
   };
   sendResponse(res, response);
-});   
+});
 // Get Total Revenue
 const totalRevenue = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -48,41 +48,38 @@ const totalRevenue = async (req: Request, res: Response, next: NextFunction) => 
 const deleteOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const orderId = req.params.orderId;
-    console.log(orderId, "orderId");
     const deletedOrder = await OrderServices.deleteOrder(orderId);
     if (deletedOrder) {
       res.status(200).json({
         message: "Order deleted successfully",
-        status: true,
+        success: true,
         data: deletedOrder,
       });
     } else {
       res.status(404).json({
         message: "Medicine not found",
-        status: false,
+        success: false,
       });
     }
   } catch (error) {
     next(error);
   }
 };
-const updateOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const changeOrderStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const orderId = req.params.orderId;
     const updates = req.body;
-    const updatedOrder = await OrderServices.updateOrder(orderId, updates);
-    if (updatedOrder) {
-      res.status(200).json({
-        message: "Order updated successfully",
-        status: true,
-        data: updatedOrder,
-      });
-    } else {
-      res.status(404).json({
-        message: "Order not found",
-        status: false,
-      });
-    }
+    const updatedOrder = await OrderServices.changeOrderStatus(orderId, updates);
+
+    res.status(200).json({
+      message: "Order status change successfully",
+      success: true,
+      data: updatedOrder,
+    });
   } catch (error) {
     next(error);
   }
@@ -93,5 +90,5 @@ export const OrderControllers = {
   totalRevenue,
   getAllOrders,
   deleteOrder,
-  updateOrder,
+  changeOrderStatus,
 };

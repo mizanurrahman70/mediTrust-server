@@ -122,7 +122,7 @@ const getAllOrders = async (query: Record<string, unknown>) => {
     query
   ).paginate();
   const result = await orderQuery.queryModel;
-  const meta = await orderQuery.countTotal( );
+  const meta = await orderQuery.countTotal();
   return { result, meta };
 };
 // Calculate revenue
@@ -184,8 +184,12 @@ const deleteOrder = async (orderId: string) => {
 };
 
 // Update order
-const updateOrder = async (orderId: string, updates: Partial<TOrder>) => {
-  const updatedOrder = await Order.findByIdAndUpdate(orderId, updates, { new: true });
+const changeOrderStatus = async (orderId: string, payload: Partial<TOrder>) => {
+  const orderData = await Order.findById(orderId);
+  if (!orderData) {
+    throw new Error("Order not found");
+  }
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, { ...payload }, { new: true });
   return updatedOrder;
 };
 
@@ -194,6 +198,6 @@ export const OrderServices = {
   calculateRevenue,
   getAllOrders,
   deleteOrder,
-  updateOrder,
+  changeOrderStatus,
   verifyPayment,
 };
