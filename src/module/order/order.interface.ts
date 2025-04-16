@@ -1,11 +1,11 @@
-import type { Types } from "mongoose";
 import { TUser } from "../user/user.interface";
+import { TMedicine } from "../medicines/medicines.interface";
 
 export interface TProduct {
-  medicine: Types.ObjectId;
+  medicine: TMedicine;
   quantity: number;
   prescription: string;
-}       
+}
 export interface TDeliveryInfo {
   name: string;
   phoneNumber: string;
@@ -19,10 +19,10 @@ export interface TOrder {
   user: TUser;
   products: TProduct[];
   totalPrice: number;
-  status: "Pending" | "Reject" | "Processing" | "Shipped" | "Completed";
+  status: "Pending" | "Reject" | "Processing" | "Shipped" | "Delivered";
   rejectNotes?: string;
-  deliveryInfo?: TDeliveryInfo;
-  deliveryOptions?: "Standard" | "Express" | "Pickup from Store";
+  deliveryInfo: TDeliveryInfo;
+  deliveryOptions: "Standard" | "Express" | "Pickup from Store";
   paymentMethod: "COD" | "surjopay";
   paymentStatus: "unpaid" | "paid";
   transaction: {
@@ -35,6 +35,7 @@ export interface TOrder {
     date_time: string;
   };
 }
+
 export interface OrderResponse<T> {
   statusCode: number;
   message: string;
