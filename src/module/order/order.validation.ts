@@ -47,7 +47,7 @@ export const createOrderValidationSchema = z.object({
 
 export const updateOrderValidationSchema = z.object({
   status: z
-    .enum(["Pending", "Reject", "Processing", "Shipped", "Completed"])
+    .enum(["Pending", "Reject", "Processing", "Shipped", "Delivered"])
     .default("Pending")
     .optional(),
   rejectNotes: z.string().optional(),

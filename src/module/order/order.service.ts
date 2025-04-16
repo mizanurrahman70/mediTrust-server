@@ -8,6 +8,7 @@ import { orderUtils } from "./order.utils"; // adjust path as needed
 import AppError from "../../errors/AppError";
 import { TOrder, TProduct } from "./order.interface";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { sendMail } from "../../utilits/setMiail";
 
 const createOrder = async (orderData: TOrder, client_ip: string) => {
   if (!orderData || orderData?.products?.length < 1) {
@@ -185,11 +186,23 @@ const deleteOrder = async (orderId: string) => {
 
 // Update order
 const changeOrderStatus = async (orderId: string, payload: Partial<TOrder>) => {
-  const orderData = await Order.findById(orderId);
+  const orderData = await Order.findById(orderId).populate("user products.medicine");
   if (!orderData) {
     throw new Error("Order not found");
   }
+
   const updatedOrder = await Order.findByIdAndUpdate(orderId, { ...payload }, { new: true });
+  const mailBody = {
+    userName: orderData?.user?.name,
+    productNames: orderData?.products?.map((product) => product.medicine.name),
+    quantity: orderData?.products?.length,
+    totalPrice: orderData?.totalPrice,
+    deliveryOptions: orderData?.deliveryOptions,
+    paymentStatus: orderData?.paymentStatus,
+    orderStatus: payload?.status as string,
+    rejectNotes: payload?.rejectNotes as string,
+  };
+  sendMail(orderData?.user?.email, mailBody);
   return updatedOrder;
 };
 
