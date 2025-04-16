@@ -1,10 +1,11 @@
 import type { Types } from "mongoose";
+import { TUser } from "../user/user.interface";
 
 export interface TProduct {
   medicine: Types.ObjectId;
   quantity: number;
   prescription: string;
-}
+}       
 export interface TDeliveryInfo {
   name: string;
   phoneNumber: string;
@@ -15,8 +16,7 @@ export interface TDeliveryInfo {
   postalCode: number;
 }
 export interface TOrder {
-  id: string;
-  user: Types.ObjectId;
+  user: TUser;
   products: TProduct[];
   totalPrice: number;
   status: "Pending" | "Reject" | "Processing" | "Shipped" | "Completed";

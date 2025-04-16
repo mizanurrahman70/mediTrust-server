@@ -18,7 +18,7 @@ export const createMedicineValidationSchema = z.object({
   }),
 });
 export const updateMedicineValidationSchema = z.object({
-  body: z.object({
+ body: z.object({ 
     name: z.string({ required_error: "Name is required" }).optional(),
     image: z.string({ required_error: "Product image is required" }).optional(),
     price: z.number().positive("Price must be a positive number").optional(),

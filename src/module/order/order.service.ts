@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 import { TMedicine } from "../medicines/medicines.interface";
 import Medicine from "../medicines/medicines.model";
 import User from "../user/user.model";
-import { TOrder, TProduct } from "./order.interface";
 import Order from "./order.model";
 import { orderUtils } from "./order.utils"; // adjust path as needed
 import AppError from "../../errors/AppError";
+import { TOrder, TProduct } from "./order.interface";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createOrder = async (orderData: TOrder, client_ip: string) => {
   if (!orderData || orderData?.products?.length < 1) {
@@ -115,6 +116,15 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
   }
 };
 
+const getAllOrders = async (query: Record<string, unknown>) => {
+  const orderQuery = new QueryBuilder(
+    Order.find().populate("user products.medicine"),
+    query
+  ).paginate();
+  const result = await orderQuery.queryModel;
+  const meta = await orderQuery.countTotal();
+  return { result, meta };
+};
 // Calculate revenue
 const calculateRevenue = async () => {
   try {
@@ -141,24 +151,24 @@ const verifyPayment = async (order_id: string) => {
   if (verifiedPayment.length) {
     await Order.findOneAndUpdate(
       {
-        'transaction.id': order_id,
+        "transaction.id": order_id,
       },
       {
-        'transaction.bank_status': verifiedPayment[0].bank_status,
-        'transaction.sp_code': verifiedPayment[0].sp_code,
-        'transaction.sp_message': verifiedPayment[0].sp_message,
-        'transaction.transactionStatus': verifiedPayment[0].transaction_status,
-        'transaction.method': verifiedPayment[0].method,
-        'transaction.date_time': verifiedPayment[0].date_time,
+        "transaction.bank_status": verifiedPayment[0].bank_status,
+        "transaction.sp_code": verifiedPayment[0].sp_code,
+        "transaction.sp_message": verifiedPayment[0].sp_message,
+        "transaction.transactionStatus": verifiedPayment[0].transaction_status,
+        "transaction.method": verifiedPayment[0].method,
+        "transaction.date_time": verifiedPayment[0].date_time,
         paymentStatus:
-          verifiedPayment[0].bank_status == 'Success'
-            ? 'paid'
-            : verifiedPayment[0].bank_status == 'Failed'
-              ? 'unpaid'
-              : verifiedPayment[0].bank_status == 'Cancel'
-                ? 'unpaid'
-                : '',
-      },
+          verifiedPayment[0].bank_status == "Success"
+            ? "paid"
+            : verifiedPayment[0].bank_status == "Failed"
+              ? "unpaid"
+              : verifiedPayment[0].bank_status == "Cancel"
+                ? "unpaid"
+                : "",
+      }
     );
   }
 
@@ -166,10 +176,6 @@ const verifyPayment = async (order_id: string) => {
 };
 
 // Get all orders
-const getAllOrders = async () => {
-  const data = await Order.find();
-  return data;
-};
 
 // Delete order
 const deleteOrder = async (orderId: string) => {
@@ -178,8 +184,12 @@ const deleteOrder = async (orderId: string) => {
 };
 
 // Update order
-const updateOrder = async (orderId: string, updates: Partial<TOrder>) => {
-  const updatedOrder = await Order.findByIdAndUpdate(orderId, updates, { new: true });
+const changeOrderStatus = async (orderId: string, payload: Partial<TOrder>) => {
+  const orderData = await Order.findById(orderId);
+  if (!orderData) {
+    throw new Error("Order not found");
+  }
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, { ...payload }, { new: true });
   return updatedOrder;
 };
 
@@ -188,6 +198,6 @@ export const OrderServices = {
   calculateRevenue,
   getAllOrders,
   deleteOrder,
-  updateOrder,
+  changeOrderStatus,
   verifyPayment,
 };

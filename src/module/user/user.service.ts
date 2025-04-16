@@ -39,5 +39,5 @@ export const userService = {
   updateUser,
   deleteUser,
   changeUserStatus,
-  changeUserRole
+  changeUserRole,
 };
