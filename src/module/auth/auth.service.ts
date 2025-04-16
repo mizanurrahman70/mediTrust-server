@@ -29,19 +29,24 @@ const registerUserIntoDB = async (payload: TUser) => {
 };
 
 const loginUser = async (payload: TLogin) => {
-  const user = await User.isUserExistByEmail(payload.email);
-  if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User is not Exist");
+const user = await User.findOne({$or:[{email:payload?.email},{phone:payload?.phone}]}).select('+password');
+
+if(!user){
+  throw new AppError(StatusCodes.NOT_FOUND, 'User does not Exist');
+}  
+
+if (user.isDeleted) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'User does not Exist');
   }
-  if (user.isDeleted === true) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User does not Exist");
-  }
+
   if (await User.isUserDeactivated(user.status!)) {
     throw new AppError(StatusCodes.BAD_REQUEST, "User is deactivated!");
   }
+
   if (!(await User.isPasswordMatch(payload?.password, user?.password))) {
     throw new AppError(StatusCodes.FORBIDDEN, "Wrong Password!");
   }
+  console.log(user);
   const jwtPayload = {
     email: user.email,
     role: user.role!,
