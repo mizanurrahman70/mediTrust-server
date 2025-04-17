@@ -47,7 +47,7 @@ const updateUser = catchAsync(async (req, res) => {
 });
 const changeUserStatus = catchAsync(async (req, res) => {
   const userId = req.params.userId;
-  const {status} = req.body;
+  const { status } = req.body;
 
   const result = await userService.changeUserStatus(userId, status);
 
@@ -60,7 +60,7 @@ const changeUserStatus = catchAsync(async (req, res) => {
 
 const changeUserRole = catchAsync(async (req, res) => {
   const userId = req.params.userId;
-  const {role} = req.body;
+  const { role } = req.body;
 
   const result = await userService.changeUserRole(userId, role);
 
@@ -88,5 +88,5 @@ export const userController = {
   updateUser,
   deleteUser,
   changeUserStatus,
-  changeUserRole
+  changeUserRole,
 };
