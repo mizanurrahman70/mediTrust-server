@@ -27,6 +27,10 @@ class QueryBuilder<T> {
     const queryObj = { ...this.query };
     const excludeField = ["searchTerm", "minPrice", "maxPrice", "sort", "limit", "page", "fields"];
     excludeField.forEach((elm) => delete queryObj[elm]);
+    if (this.query?.lowStock) {
+      this.queryModel.find({ quantity: { $lte: 6 } });
+      return this;
+    }
     this.queryModel = this.queryModel.find(queryObj as FilterQuery<T>);
     return this;
   }
