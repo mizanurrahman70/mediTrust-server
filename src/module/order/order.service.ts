@@ -127,22 +127,28 @@ const getAllOrders = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 // Calculate revenue
-const calculateRevenue = async () => {
-  try {
-    const revenue = await Order.aggregate([
-      {
-        $group: {
-          _id: null,
-          totalRevenue: { $sum: "$totalPrice" },
-        },
+const getAllOverview = async () => {
+  const userCount = (await User.find()).length;
+  const orderCount = (await Order.find()).length;
+  const pendingOrdersCount = await Order.countDocuments({ status: "Pending" });
+  const productCount = (await Medicine.find()).length;
+  const lowStockProductCount = (await Medicine.find({ quantity: { $lte: 6 } })).length;
+  const totalRevenue = await Order.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: "$totalPrice" },
       },
-    ]);
-
-    return revenue.length > 0 ? revenue[0].totalRevenue : 0;
-  } catch (error) {
-    console.error("Error calculating revenue:", error);
-    throw new Error("Failed to calculate revenue");
-  }
+    },
+  ]);
+  return {
+    userCount,
+    orderCount,
+    pendingOrdersCount,
+    productCount,
+    lowStockProductCount,
+    totalRevenue: totalRevenue[0].totalRevenue, 
+  };
 };
 
 // Verify payment
@@ -208,7 +214,7 @@ const changeOrderStatus = async (orderId: string, payload: Partial<TOrder>) => {
 
 export const OrderServices = {
   createOrder,
-  calculateRevenue,
+  getAllOverview,
   getAllOrders,
   deleteOrder,
   changeOrderStatus,

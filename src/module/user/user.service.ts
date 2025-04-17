@@ -33,6 +33,8 @@ const deleteUser = async (id: string) => {
   const result = await User.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
   return result;
 };
+
+
 export const userService = {
   getUser,
   getSingleUser,
