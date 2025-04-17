@@ -118,10 +118,10 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
 };
 
 const getAllOrders = async (query: Record<string, unknown>) => {
-  const orderQuery = new QueryBuilder(
-    Order.find().populate("user products.medicine"),
-    query
-  ).paginate();
+  const orderQuery = new QueryBuilder(Order.find().populate("user products.medicine"), query)
+    .paginate()
+    .filter()
+    .sort();
   const result = await orderQuery.queryModel;
   const meta = await orderQuery.countTotal();
   return { result, meta };
@@ -147,7 +147,7 @@ const getAllOverview = async () => {
     pendingOrdersCount,
     productCount,
     lowStockProductCount,
-    totalRevenue: totalRevenue[0].totalRevenue, 
+    totalRevenue: totalRevenue[0].totalRevenue,
   };
 };
 
