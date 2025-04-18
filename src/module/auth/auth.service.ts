@@ -9,6 +9,12 @@ import { TLogin } from './auth.interface';
 import AppError from '../../errors/AppError';
 
 const registerUserIntoDB = async (payload: TUser) => {
+  if (await User.isUserExistByEmail(payload?.email)) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'The email is already exist!');
+  }
+  if (await User.isUserExistByPhone(payload?.phone as string)) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'The phone number is already exist!');
+  }
   const user = await User.create(payload);
   const jwtPayload = {
     email: user.email,

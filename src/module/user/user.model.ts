@@ -9,7 +9,7 @@ const userSchema = new Schema<TUser, UserModel>(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, required: true },
+    phone: { type: String, required: true,unique:true },
     password: { type: String, required: true, select: 0 },
     passwordChangedAt: { type: Date, default: null },
     status: {
