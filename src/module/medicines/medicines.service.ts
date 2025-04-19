@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { TMedicine } from "./medicines.interface";
 import Medicine from "./medicines.model";
@@ -40,11 +41,19 @@ const deleteMedicine = async (medicineId: string) => {
   const deletedMedicine = await Medicine.findByIdAndDelete(medicineId);
   return deletedMedicine;
 };
-
+// Get cart medicine
+const getCartMedicines = async (medicineIds: string[]) => {
+  const objectIds = medicineIds.map((id) => new Types.ObjectId(id));
+  const result = await Medicine.find({
+    _id: { $in: objectIds },
+  });
+  return result;
+};
 export const MedicineService = {
   createMedicine,
   getAllMedicines,
   getMedicineById,
   updateMedicine,
   deleteMedicine,
+ getCartMedicines,
 };

@@ -95,6 +95,22 @@ const deleteMedicine = async (req: Request, res: Response, next: NextFunction): 
   }
 };
 
+// Get Cart Medicine
+const getCartMedicines = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const medicineIds = req.body;
+    const result = await MedicineService.getCartMedicines(medicineIds);
+
+    res.status(201).json({
+      message: " Cart Medicine getting  successfully",
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Export the Medicine controller
 export const medicineController = {
   createMedicine,
@@ -102,4 +118,5 @@ export const medicineController = {
   getMedicineById,
   updateMedicine,
   deleteMedicine,
+  getCartMedicines,
 };

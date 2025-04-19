@@ -21,4 +21,5 @@ router.put(
 );
 router.delete("/medicine/:medicineId", medicineController.deleteMedicine);
 
+router.post("/get-cart-medicines", medicineController.getCartMedicines);
 export const medicineRoutes = router;
