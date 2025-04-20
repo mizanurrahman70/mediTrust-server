@@ -25,7 +25,16 @@ class QueryBuilder<T> {
   // filter query
   filter() {
     const queryObj = { ...this.query };
-    const excludeField = ["searchTerm", "minPrice", "maxPrice", "sort", "limit", "page", "fields"];
+    const excludeField = [
+      "searchTerm",
+      "minPrice",
+      "maxPrice",
+      "sort",
+      "limit",
+      "page",
+      "fields",
+      "requiredPrescription",
+    ];
     excludeField.forEach((elm) => delete queryObj[elm]);
     if (this.query?.lowStock) {
       this.queryModel.find({ quantity: { $lte: 6 } });
@@ -68,6 +77,22 @@ class QueryBuilder<T> {
       this.queryModel = this.queryModel.find({
         price: priceFilter,
       } as FilterQuery<T>);
+    }
+
+    return this;
+  }
+  // required prescription filter
+  prescriptionFilter() {
+    const requiresPrescription = this.query?.requiredPrescription;
+
+    if (requiresPrescription !== undefined) {
+      const value = String(requiresPrescription).toLowerCase() === "true";
+
+      if (value) {
+        this.queryModel = this.queryModel.find({
+          requiredPrescription: value,
+        } as FilterQuery<T>);
+      }
     }
 
     return this;
