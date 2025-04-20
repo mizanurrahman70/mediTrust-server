@@ -30,6 +30,17 @@ const getAllOrders = catchAsync(async (req, res) => {
   };
   sendResponse(res, response);
 });
+const getUserOrders = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const order = await OrderServices.getUserOrders(userId);
+  const response: OrderResponse<typeof order> = {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User Orders retrieved successfully",
+    data: order,
+  };
+  sendResponse(res, response);
+});
 // Get Total Revenue
 const getAllOverview = catchAsync(async (req, res) => {
   const result = await OrderServices.getAllOverview();
@@ -80,10 +91,22 @@ const changeOrderStatus = async (
   }
 };
 
+const verifiedPayment = catchAsync(async (req, res) => {
+  const { order_id } = req.query;
+  const result = await OrderServices.verifyPayment(order_id as string);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: "Payment verify successfully",
+    data: result,
+  });
+});
 export const OrderControllers = {
   createOrder,
   getAllOverview,
   getAllOrders,
   deleteOrder,
   changeOrderStatus,
+  verifiedPayment,
+  getUserOrders,
 };

@@ -10,11 +10,14 @@ router.post(
 );
 router.get("/overview", OrderControllers.getAllOverview);
 router.get("/orders", OrderControllers.getAllOrders);
+router.get("/orders/:userId", OrderControllers.getUserOrders);
+router.get("/orders", OrderControllers.getAllOrders);
 router.delete("/orders/:orderId", OrderControllers.deleteOrder);
 router.put(
   "/order/:orderId",
   validateRequest(updateOrderValidationSchema),
   OrderControllers.changeOrderStatus
 );
+router.get("/order/verify-payment", OrderControllers.verifiedPayment);
 
 export const OrderRoutes = router;

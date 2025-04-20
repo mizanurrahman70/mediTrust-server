@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { TMedicine } from "../medicines/medicines.interface";
 import Medicine from "../medicines/medicines.model";
 import User from "../user/user.model";
@@ -126,6 +126,10 @@ const getAllOrders = async (query: Record<string, unknown>) => {
   const meta = await orderQuery.countTotal();
   return { result, meta };
 };
+const getUserOrders = async (userId: string) => {
+  const result = await Order.find({ user: new Types.ObjectId(userId) });
+  return result;
+};
 // Calculate revenue
 const getAllOverview = async () => {
   const userCount = (await User.find()).length;
@@ -219,4 +223,5 @@ export const OrderServices = {
   deleteOrder,
   changeOrderStatus,
   verifyPayment,
+  getUserOrders
 };
