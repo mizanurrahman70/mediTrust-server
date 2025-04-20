@@ -127,7 +127,9 @@ const getAllOrders = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 const getUserOrders = async (userId: string) => {
-  const result = await Order.find({ user: new Types.ObjectId(userId) });
+  const result = await Order.find({ user: new Types.ObjectId(userId) }).populate(
+    "user products.medicine"
+  );
   return result;
 };
 // Calculate revenue
@@ -223,5 +225,5 @@ export const OrderServices = {
   deleteOrder,
   changeOrderStatus,
   verifyPayment,
-  getUserOrders
+  getUserOrders,
 };
