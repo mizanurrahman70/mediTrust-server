@@ -16,6 +16,27 @@ export const userValidationSchema = z.object({
     })
     .max(20, { message: "Password can not be more than 20 characters" }),
 });
+export const updateUserValidationSchema = z.object({
+  body: z.object({
+    name: z
+      .string({
+        required_error: "Email must be provided and must be a string",
+      })
+      .optional(),
+    email: z
+      .string({
+        required_error: "Email must be provided and must be a string",
+      })
+      .email()
+      .optional(),
+
+    phone: z
+      .string({
+        required_error: "Phone number must be provided and must be a string",
+      })
+      .optional(),
+  }),
+});
 export const changeUserStatusValidationSchema = z.object({
   body: z.object({ status: z.enum(["active", "deactivated"]) }),
 });
