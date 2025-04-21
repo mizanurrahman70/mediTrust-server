@@ -118,7 +118,10 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
 };
 
 const getAllOrders = async (query: Record<string, unknown>) => {
-  const orderQuery = new QueryBuilder(Order.find().populate("user products.medicine"), query)
+  const orderQuery = new QueryBuilder(
+    Order.find().populate("user").populate("products.medicine"),
+    query
+  )
     .paginate()
     .filter()
     .sort();
@@ -127,7 +130,9 @@ const getAllOrders = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 const getUserOrders = async (userId: string) => {
-  const result = await Order.find({ user: new Types.ObjectId(userId) });
+  const result = await Order.find({ user: new Types.ObjectId(userId) })
+    .populate("user")
+    .populate("products.medicine");
   return result;
 };
 // Calculate revenue
@@ -223,5 +228,5 @@ export const OrderServices = {
   deleteOrder,
   changeOrderStatus,
   verifyPayment,
-  getUserOrders
+  getUserOrders,
 };

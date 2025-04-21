@@ -17,7 +17,8 @@ const getAllMedicines = async (query: Record<string, unknown>) => {
     .filter()
     .paginate()
     .priceRange()
-    .sort();
+    .sort()
+    .prescriptionFilter();
   const result = await medicineQuery.queryModel;
   const meta = await medicineQuery.countTotal();
   return { result, meta };
