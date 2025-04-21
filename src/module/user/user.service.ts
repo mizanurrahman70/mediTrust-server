@@ -16,9 +16,8 @@ const getSingleUser = async (id: string) => {
   const result = await User.findById(id);
   return result;
 };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const updateUser = async (id: string, data: TUser) => {
-  const result = await User.findByIdAndUpdate(id, { role: "admin" }, { new: true });
+  const result = await User.findByIdAndUpdate(id, { ...data }, { new: true });
   return result;
 };
 const changeUserStatus = async (id: string, status: string) => {
@@ -33,7 +32,6 @@ const deleteUser = async (id: string) => {
   const result = await User.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
   return result;
 };
-
 
 export const userService = {
   getUser,
