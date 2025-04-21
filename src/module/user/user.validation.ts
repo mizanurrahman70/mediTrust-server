@@ -22,7 +22,6 @@ export const updateUserValidationSchema = z.object({
       .string({
         required_error: "Email must be provided and must be a string",
       })
-      .email()
       .optional(),
     email: z
       .string({
