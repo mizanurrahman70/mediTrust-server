@@ -8,9 +8,8 @@ type IData = {
   deliveryOptions: string;
   paymentStatus: string;
   orderStatus: string;
-  rejectNotes?: string;
 };
-export const sendMail = async (to: string, data: IData) => {
+export const sendConfirmOrderMail = async (to: string, data: IData) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -24,8 +23,8 @@ export const sendMail = async (to: string, data: IData) => {
   await transporter.sendMail({
     from: "medimart@gmail.com", // sender address
     to, // list of receivers
-    subject: `Change the order status in MediMart`, // Subject line
-    text: `Change the order status in MediMart`, // plain text body
+    subject: `Order confirmation in MediMart`, // Subject line
+    text: `Order confirmation in MediMart`, // plain text body
     html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
           <h2 style="color: #333;">Hi ${data?.userName},</h2>
@@ -43,12 +42,10 @@ export const sendMail = async (to: string, data: IData) => {
           <p><strong>Delivery Option:</strong> ${data?.deliveryOptions}</p>
           <p><strong>Payment Status:</strong> ${data?.paymentStatus}</p>
           <p><strong>Order Status:</strong> ${data?.orderStatus}</p>
-          ${data?.orderStatus === "Reject" ? `<p><strong>Reject Notes:</strong> ${data?.rejectNotes}</p>` : ``}
           <p>We'll notify you when your items are delivery.</p>
           <br />
           <p>Best regards,<br/>Medi Mart Team</p>
         </div>
       `, // html body
   });
-
 };

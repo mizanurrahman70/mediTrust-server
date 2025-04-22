@@ -18,6 +18,7 @@ export interface TDeliveryInfo {
 export interface TOrder {
   user: TUser;
   products: TProduct[];
+  productNames?: string[];
   totalPrice: number;
   status: "Pending" | "Reject" | "Processing" | "Shipped" | "Delivered";
   rejectNotes?: string;
