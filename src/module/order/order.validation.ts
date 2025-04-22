@@ -36,6 +36,7 @@ export const createOrderValidationSchema = z.object({
   body: z.object({
     user: z.string({ required_error: "User id is required" }),
     products: z.array(productSchema, { required_error: "Products is required" }),
+    productNames: z.array(z.string({ required_error: "Product names is required" })),
     deliveryInfo: deliveryInfoSchema,
     deliveryOptions: z.enum(["Standard", "Express", "Pickup from Store"]),
     paymentMethod: z.enum(["COD", "surjopay"]),

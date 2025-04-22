@@ -9,6 +9,8 @@ import AppError from "../../errors/AppError";
 import { TOrder, TProduct } from "./order.interface";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { sendMail } from "../../utilits/setMiail";
+import { sendLowStockMail } from "../../utilits/sentAdminEmail";
+import { sendConfirmOrderMail } from "../../utilits/sentOrderConfirmMiil";
 
 const createOrder = async (orderData: TOrder, client_ip: string) => {
   if (!orderData || orderData?.products?.length < 1) {
@@ -55,7 +57,14 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
       orderData?.products?.map(async (item: TProduct) => {
         const productData = await Medicine.findById(item.medicine);
         if (productData) {
+          const currentStock = productData.quantity - item.quantity;
           productData.quantity -= item.quantity;
+          if (currentStock < 6) {
+            sendLowStockMail({
+              productName: productData.name,
+              quantity: productData?.quantity,
+            });
+          }
           await productData.save({ session });
         }
       })
@@ -75,7 +84,16 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
       ],
       { session }
     );
-
+    const mailBody = {
+      userName: user?.name,
+      productNames: orderData?.productNames as string[],
+      quantity: orderData?.products?.length,
+      totalPrice: grandTotal,
+      deliveryOptions: orderData?.deliveryOptions,
+      paymentStatus: orderData?.paymentMethod === "COD" ? "Unpaid" : "Ongoing",
+      orderStatus: "Pending",
+    };
+    sendConfirmOrderMail(user?.email, mailBody);
     const shurjopayPayload = {
       amount: grandTotal,
       order_id: orderResponse[0]._id,

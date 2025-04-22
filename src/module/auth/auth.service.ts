@@ -52,7 +52,6 @@ if (user.isDeleted) {
   if (!(await User.isPasswordMatch(payload?.password, user?.password))) {
     throw new AppError(StatusCodes.FORBIDDEN, "Wrong Password!");
   }
-  console.log(user);
   const jwtPayload = {
     email: user.email,
     role: user.role!,
