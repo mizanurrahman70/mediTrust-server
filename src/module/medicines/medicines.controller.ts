@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import { MedicineService } from "./medicines.service";
 import catchAsYnc from "../../utilits/catchAsync";
 
