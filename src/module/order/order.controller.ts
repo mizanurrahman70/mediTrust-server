@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import { OrderServices } from "./order.service";
 import catchAsync from "../../utilits/catchAsync";
 import sendResponse from "../../utilits/sendResponse";
@@ -6,20 +5,16 @@ import { StatusCodes } from "http-status-codes";
 import { OrderResponse } from "./order.interface";
 
 // Create an Order
-const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const order = req.body;
-    const result = await OrderServices.createOrder(order, req.ip!);
+const createOrder = catchAsync(async (req, res) => {
+  const order = req.body;
+  const result = await OrderServices.createOrder(order, req.ip!);
 
-    res.status(201).json({
-      message: "Order created successfully",
-      success: true,
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.status(201).json({
+    message: "Order created successfully",
+    success: true,
+    data: result,
+  });
+});
 const getAllOrders = catchAsync(async (req, res) => {
   const order = await OrderServices.getAllOrders(req?.query);
   const response: OrderResponse<typeof order> = {
@@ -51,45 +46,33 @@ const getAllOverview = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const deleteOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const orderId = req.params.orderId;
-    const deletedOrder = await OrderServices.deleteOrder(orderId);
-    if (deletedOrder) {
-      res.status(200).json({
-        message: "Order deleted successfully",
-        success: true,
-        data: deletedOrder,
-      });
-    } else {
-      res.status(404).json({
-        message: "Medicine not found",
-        success: false,
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-const changeOrderStatus = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const orderId = req.params.orderId;
-    const updates = req.body;
-    const updatedOrder = await OrderServices.changeOrderStatus(orderId, updates);
-
+const deleteOrder = catchAsync(async (req, res) => {
+  const orderId = req.params.orderId;
+  const deletedOrder = await OrderServices.deleteOrder(orderId);
+  if (deletedOrder) {
     res.status(200).json({
-      message: "Order status change successfully",
+      message: "Order deleted successfully",
       success: true,
-      data: updatedOrder,
+      data: deletedOrder,
     });
-  } catch (error) {
-    next(error);
+  } else {
+    res.status(404).json({
+      message: "Medicine not found",
+      success: false,
+    });
   }
-};
+});
+const changeOrderStatus = catchAsync(async (req, res) => {
+  const orderId = req.params.orderId;
+  const updates = req.body;
+  const updatedOrder = await OrderServices.changeOrderStatus(orderId, updates);
+
+  res.status(200).json({
+    message: "Order status change successfully",
+    success: true,
+    data: updatedOrder,
+  });
+});
 
 const verifiedPayment = catchAsync(async (req, res) => {
   const { order_id } = req.query;
