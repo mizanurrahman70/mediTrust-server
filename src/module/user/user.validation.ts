@@ -1,21 +1,5 @@
 import { z } from "zod";
 
-export const userValidationSchema = z.object({
-  email: z
-    .string({
-      required_error: "Email must be provided and must be a string",
-    })
-    .email(),
-
-  phone: z.string({
-    required_error: "Phone number must be provided and must be a string",
-  }),
-  password: z
-    .string({
-      required_error: "Password is required for your safety",
-    })
-    .max(20, { message: "Password can not be more than 20 characters" }),
-});
 export const updateUserValidationSchema = z.object({
   body: z.object({
     name: z

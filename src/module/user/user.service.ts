@@ -16,6 +16,10 @@ const getSingleUser = async (id: string) => {
   const result = await User.findById(id);
   return result;
 };
+const getMe = async (id: string) => {
+  const result = await User.findById(id);
+  return result;
+};
 const updateUser = async (id: string, data: TUser) => {
   const result = await User.findByIdAndUpdate(id, { ...data }, { new: true });
   return result;
@@ -34,6 +38,7 @@ const deleteUser = async (id: string) => {
 };
 
 export const userService = {
+  getMe,
   getUser,
   getSingleUser,
   updateUser,

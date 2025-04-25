@@ -10,6 +10,11 @@ export type TUser = {
   passwordChangedAt?: Date;
   status?: "active" | "deactivated";
   role?: "admin" | "customer";
+  city: string;
+  district: string;
+  thana: string;
+  postalCode: number;
+  localAddress: string;
   isDeleted?: boolean;
   createdAt?: Date;
   updatedAt?: Date;

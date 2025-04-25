@@ -9,11 +9,11 @@ export interface TProduct {
 export interface TDeliveryInfo {
   name: string;
   phoneNumber: string;
-  localAddress: string;
   city: string;
   district: string;
   thana: string;
   postalCode: number;
+  localAddress: string;
 }
 export interface TOrder {
   user: TUser;

@@ -12,8 +12,8 @@ type IData = {
 export const sendConfirmOrderMail = async (to: string, data: IData) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: config.node_env === "production", // true for port 465, false for other ports
+    port: 465,
+    secure: true, // true for port 465, false for other ports
     auth: {
       user: config.nodemailer_user_email,
       pass: config.nodemailer_user_pass,

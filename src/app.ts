@@ -8,14 +8,14 @@ import { globalErrorHandler } from "./errors/GlobalErrorHandler";
 const app: Application = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["https://medimart-sh-v4.vercel.app", "http://localhost:5000/api"],
     credentials: true,
   })
 );
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
+app.use("/api", userRouter);
 app.use("/api", medicineRoutes);
 app.use("/api", OrderRoutes);
 

@@ -9,7 +9,7 @@ const userSchema = new Schema<TUser, UserModel>(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, required: true,unique:true },
+    phone: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: 0 },
     passwordChangedAt: { type: Date, default: null },
     status: {
@@ -18,6 +18,11 @@ const userSchema = new Schema<TUser, UserModel>(
       default: "active",
     },
     role: { type: String, enum: ["admin", "customer"], default: "customer" },
+    city: { type: String, required: true, trim: true },
+    district: { type: String, required: true, trim: true },
+    thana: { type: String, required: true, trim: true },
+    postalCode: { type: Number, required: true, },
+    localAddress: { type: String, required: true, trim: true },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -58,7 +63,6 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   }
   next(); // optional
 });
-
 
 userSchema.statics.isUserExistByEmail = async function (email: string) {
   return await User.findOne({ email }).select("+password");
