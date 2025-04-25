@@ -1,114 +1,95 @@
-import { NextFunction, Request, Response } from "express";
 import { OrderServices } from "./order.service";
-import mongoose from "mongoose";
 import catchAsync from "../../utilits/catchAsync";
 import sendResponse from "../../utilits/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { OrderResponse } from "./order.interface";
 
 // Create an Order
-const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const Order = req.body;
+const createOrder = catchAsync(async (req, res) => {
+  const order = req.body;
+  const result = await OrderServices.createOrder(order, req.ip!);
 
-    const productDetails = Order.items.map((item: any) => ({
-        medicine: mongoose.Types.ObjectId.isValid(item.medicine)
-          ? new mongoose.Types.ObjectId(item.medicine)
-          : null,
-        quantity: item.quantity,
-      }));
-   
-
-    const result = await OrderServices.createOrder({
-        userId: Order.userId,
-        medicines: productDetails,
-    });
-
-    res.status(201).json({
-      message: "Order created successfully",
-      success: true,
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Get Total Revenue
-const totalRevenue = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const revenue = await OrderServices.calculateRevenue();
-
-    res.status(200).json({
-      message: 'Revenue calculated successfully',
-      success: true,
-      data: { totalRevenue: revenue },
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-
-
-//get all orders
+  res.status(201).json({
+    message: "Order created successfully",
+    success: true,
+    data: result,
+  });
+});
 const getAllOrders = catchAsync(async (req, res) => {
-  const order = await OrderServices.getAllOrders();
+  const order = await OrderServices.getAllOrders(req?.query);
+  const response: OrderResponse<typeof order> = {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Orders retrieved successfully",
+    data: order,
+  };
+  sendResponse(res, response);
+});
+const getUserOrders = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const order = await OrderServices.getUserOrders(userId);
+  const response: OrderResponse<typeof order> = {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "User Orders retrieved successfully",
+    data: order,
+  };
+  sendResponse(res, response);
+});
+// Get Total Revenue
+const getAllOverview = catchAsync(async (req, res) => {
+  const result = await OrderServices.getAllOverview();
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: 'Orders retrieved successfully',
-    data: order,
+    message: "Overview getting successfully",
+    data: result,
   });
 });
-const deleteOrder = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
-  try {
-    const orderId = req.params.orderId;
-    console.log(orderId,'orderId');
-    const deletedOrder = await OrderServices.deleteOrder(orderId);
-    if (deletedOrder) {
-      res.status(200).json({
-        message: "Order deleted successfully",
-        status: true,
-        data: deletedOrder,
-      });
-    } else {
-      res.status(404).json({
-        message: "Medicine not found",
-        status: false,
-      });
-    }
-  } catch (error) {
-  next(error)
+const deleteOrder = catchAsync(async (req, res) => {
+  const orderId = req.params.orderId;
+  const deletedOrder = await OrderServices.deleteOrder(orderId);
+  if (deletedOrder) {
+    res.status(200).json({
+      message: "Order deleted successfully",
+      success: true,
+      data: deletedOrder,
+    });
+  } else {
+    res.status(404).json({
+      message: "Medicine not found",
+      success: false,
+    });
   }
-};
-const updateOrder = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
-    try{
-        const orderId = req.params.orderId; 
-        const updates = req.body;
-        const updatedOrder = await OrderServices.updateOrder(orderId, updates); 
-        if (updatedOrder) {
-          res.status(200).json({
-            message: "Order updated successfully",
-            status: true,
-            data: updatedOrder,
-          });
-        } else {
-          res.status(404).json({
-            message: "Order not found",
-            status: false,
-          });
-        }
-      } catch (error) {
-        next(error)
-      }
+});
+const changeOrderStatus = catchAsync(async (req, res) => {
+  const orderId = req.params.orderId;
+  const updates = req.body;
+  const updatedOrder = await OrderServices.changeOrderStatus(orderId, updates);
 
-    }
+  res.status(200).json({
+    message: "Order status change successfully",
+    success: true,
+    data: updatedOrder,
+  });
+});
 
+const verifiedPayment = catchAsync(async (req, res) => {
+  const { order_id } = req.query;
+  const result = await OrderServices.verifyPayment(order_id as string);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: "Payment verify successfully",
+    data: result,
+  });
+});
 export const OrderControllers = {
   createOrder,
-  totalRevenue,
+  getAllOverview,
   getAllOrders,
   deleteOrder,
-  updateOrder
-}
+  changeOrderStatus,
+  verifiedPayment,
+  getUserOrders,
+};

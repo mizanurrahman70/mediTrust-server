@@ -1,17 +1,32 @@
 
 import mongoose  from "mongoose";
+import { Server } from 'http';
 import config from "./config"
 import  app from "./app"
-async function save(){
- try{
+let server: Server;
+
+async function main() {
+  try {
     await mongoose.connect(config.database_url as string);
-    console.log('connecting');
-    app.listen(config.port, () => {
-        console.log(`Server is running on port ${config.port}`);
+    server = app.listen(config.port, () => {
+      console.log(`Server is listening on port ${config.port}`);
     });
- }
- catch(err){
-     console.log(err);
- }
+  } catch (error) {
+    console.log(error);
+  }
 }
-save()
+main();
+
+process.on('unhandledRejection', () => {
+  if (server) {
+    server.close(() => {
+      console.log('Server closed due to unhandled rejection');
+      process.exit(1);
+    });
+  }
+});
+
+process.on('uncaughtException', () => {
+  console.log('Uncaught exception, shutting down the server');
+  process.exit(1);
+});
