@@ -137,7 +137,7 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
 
 const getAllOrders = async (query: Record<string, unknown>) => {
   const orderQuery = new QueryBuilder(
-    Order.find().populate("user").populate("products.product"),
+    Order.find().populate("user").populate("products.product").populate("products.product.reviews"),
     query
   )
     .paginate()

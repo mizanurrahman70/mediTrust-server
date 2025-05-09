@@ -62,6 +62,15 @@ const getReviewsForProductFromDb = async (productId: string) => {
   const result = await Review.find({ product: productId }).populate("reviewer product");
   return result;
 };
+
+const isUserGiveReviewThisProduct = async (productId: string, userId: string) => {
+  const result = await Review.find({ product: productId, reviewer: userId }).populate(
+    "reviewer product"
+  );
+
+  return result;
+};
+
 // For bad review
 const deleteReviewFromDb = async (id: string) => {
   const session = await mongoose.startSession();
@@ -108,4 +117,5 @@ export const reviewServices = {
   getReviewsForProductFromDb,
   deleteReviewFromDb,
   getMyReviewsFromDb,
+  isUserGiveReviewThisProduct
 };
