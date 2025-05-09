@@ -1,8 +1,8 @@
+import { TProduct } from "../products/products.interface";
 import { TUser } from "../user/user.interface";
-import { TMedicine } from "../medicines/medicines.interface";
 
-export interface TProduct {
-  medicine: TMedicine;
+export interface TOrderProduct {
+  product: TProduct;
   quantity: number;
   prescription: string;
 }
@@ -17,7 +17,7 @@ export interface TDeliveryInfo {
 }
 export interface TOrder {
   user: TUser;
-  products: TProduct[];
+  products: TOrderProduct[];
   productNames?: string[];
   totalPrice: number;
   status: "Pending" | "Reject" | "Processing" | "Shipped" | "Delivered";

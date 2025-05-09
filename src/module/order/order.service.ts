@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose, { Types } from "mongoose";
-import { TMedicine } from "../medicines/medicines.interface";
-import Medicine from "../medicines/medicines.model";
+import Medicine from "../products/products.model";
 import User from "../user/user.model";
 import Order from "./order.model";
 import { orderUtils } from "./order.utils"; // adjust path as needed
 import AppError from "../../errors/AppError";
-import { TOrder, TProduct } from "./order.interface";
+import { TOrder, TOrderProduct } from "./order.interface";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { sendMail } from "../../utilits/setMiail";
 import { sendLowStockMail } from "../../utilits/sentAdminEmail";
 import { sendConfirmOrderMail } from "../../utilits/sentOrderConfirmMiil";
+import { TProduct } from "../products/products.interface";
 
 const createOrder = async (orderData: TOrder, client_ip: string) => {
   if (!orderData || orderData?.products?.length < 1) {
@@ -25,13 +25,13 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
   let grandTotal = 0;
 
   await Promise.all(
-    orderData?.products?.map(async (item: TProduct) => {
-      const productData = await Medicine.findById(item.medicine);
+    orderData?.products?.map(async (item: TOrderProduct) => {
+      const productData = await Medicine.findById(item.product);
       if (!productData) {
-        throw new Error(`Product not found: ${item.medicine}`);
+        throw new Error(`Product not found: ${item.product}`);
       }
 
-      if ((productData as TMedicine).quantity < item.quantity) {
+      if ((productData as TProduct).quantity < item.quantity) {
         throw new Error(`Insufficient stock for ${productData.name}`);
       }
 
@@ -54,8 +54,8 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
     // reduce the product quantity
     // Reduce stock
     await Promise.all(
-      orderData?.products?.map(async (item: TProduct) => {
-        const productData = await Medicine.findById(item.medicine);
+      orderData?.products?.map(async (item: TOrderProduct) => {
+        const productData = await Medicine.findById(item.product);
         if (productData) {
           const currentStock = productData.quantity - item.quantity;
           productData.quantity -= item.quantity;
@@ -137,7 +137,7 @@ const createOrder = async (orderData: TOrder, client_ip: string) => {
 
 const getAllOrders = async (query: Record<string, unknown>) => {
   const orderQuery = new QueryBuilder(
-    Order.find().populate("user").populate("products.medicine"),
+    Order.find().populate("user").populate("products.product"),
     query
   )
     .paginate()
@@ -150,7 +150,7 @@ const getAllOrders = async (query: Record<string, unknown>) => {
 const getUserOrders = async (userId: string) => {
   const result = await Order.find({ user: new Types.ObjectId(userId) })
     .populate("user")
-    .populate("products.medicine");
+    .populate("products.product");
   return result;
 };
 // Calculate revenue
@@ -219,7 +219,7 @@ const deleteOrder = async (orderId: string) => {
 
 // Update order
 const changeOrderStatus = async (orderId: string, payload: Partial<TOrder>) => {
-  const orderData = await Order.findById(orderId).populate("user products.medicine");
+  const orderData = await Order.findById(orderId).populate("user products.product");
   if (!orderData) {
     throw new Error("Order not found");
   }
@@ -227,7 +227,7 @@ const changeOrderStatus = async (orderId: string, payload: Partial<TOrder>) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, { ...payload }, { new: true });
   const mailBody = {
     userName: orderData?.user?.name,
-    productNames: orderData?.products?.map((product) => product.medicine.name),
+    productNames: orderData?.products?.map((product) => product.product.name),
     quantity: orderData?.products?.length,
     totalPrice: orderData?.totalPrice,
     deliveryOptions: orderData?.deliveryOptions,

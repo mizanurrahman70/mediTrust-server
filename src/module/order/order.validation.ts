@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // Single product schema
 export const productSchema = z.object({
-  medicine: z.string({ required_error: "Medicine is required" }),
+  product: z.string({ required_error: "Product is required" }),
   quantity: z.number({ required_error: "Quantity is required" }).int(),
   prescription: z.string().optional(),
 });
