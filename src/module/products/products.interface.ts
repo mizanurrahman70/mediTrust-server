@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface TProduct {
   name: string;
   type: "medicine" | "instrument";
@@ -20,4 +22,5 @@ export interface TProduct {
     contact: string;
     location: string;
   };
+  reviews: Types.ObjectId[];
 }

@@ -51,6 +51,7 @@ const productSchema = new Schema({
   },
 
   image: { type: String, required: true },
+  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 });
 
 const Product = model("Product", productSchema);
