@@ -2,10 +2,11 @@ import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import userRouter from "./module/user/user.router";
 import authRouter from "./module/auth/auth.router";
-import { medicineRoutes } from "./module/medicines/products.route";
+import { medicineRoutes } from "./module/products/products.route";
 import { OrderRoutes } from "./module/order/order.route";
 import { globalErrorHandler } from "./errors/GlobalErrorHandler";
 import { instrumentRoutes } from "./module/healthInstrument/instrument.routes";
+import { reviewRoutes } from "./module/reviews/review.route";
 const app: Application = express();
 app.use(
   cors({
@@ -19,6 +20,7 @@ app.use("/api/auth", authRouter);
 app.use("/api", userRouter);
 app.use("/api", medicineRoutes);
 app.use("/api", OrderRoutes);
+app.use("/api", reviewRoutes);
 app.use("/api", instrumentRoutes);
 
 app.get("/", (req: Request, res: Response) => {

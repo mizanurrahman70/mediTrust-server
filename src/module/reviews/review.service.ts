@@ -1,29 +1,30 @@
-import mongoose, { Types } from 'mongoose';
-import QueryBuilder from '../../builder/QueryBuilder';
-import AppError from '../../errors/AppError';
-import { Product } from '../products/products.model';
-import { User } from '../user/user.model';
-import { TReview } from './review.interface';
-import { Review } from './review.model';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import mongoose, { Types } from "mongoose";
+import QueryBuilder from "../../builder/QueryBuilder";
+import AppError from "../../errors/AppError";
+import { TReview } from "./review.interface";
+import { Review } from "./review.model";
+import Product from "../products/products.model";
+import User from "../user/user.model";
 
 const createReviewIntoDb = async (data: TReview) => {
   const productData = await Product.findById(data.product);
   // throw error if product is not found
   if (!productData) {
-    throw new AppError(404, 'Product not found');
+    throw new AppError(404, "Product not found");
   }
 
   const user = await User.findById(data.reviewer);
   // throw error if product is not found
   if (!user) {
-    throw new AppError(404, 'User not found');
+    throw new AppError(404, "User not found");
   }
   const isExistReviewOnSameProductBySameUser = await Review.find({
     reviewer: data.reviewer,
     product: data.product,
   });
   if (isExistReviewOnSameProductBySameUser.length > 0) {
-    throw new AppError(400, 'You already give review on this product');
+    throw new AppError(400, "You already give review on this product");
   }
   const session = await mongoose.startSession();
 
@@ -36,7 +37,7 @@ const createReviewIntoDb = async (data: TReview) => {
     await Product.findByIdAndUpdate(
       data.product,
       { $push: { reviews: review._id } }, // Push the review ID
-      { new: true, session },
+      { new: true, session }
     );
     await session.commitTransaction();
     await session.endSession();
@@ -49,10 +50,7 @@ const createReviewIntoDb = async (data: TReview) => {
   }
 };
 const getAllReviewsFromDb = async (query: Record<string, unknown>) => {
-  const reviewQuery = new QueryBuilder(
-    Review.find().populate('reviewer product'),
-    query,
-  )
+  const reviewQuery = new QueryBuilder(Review.find().populate("reviewer product"), query)
     .fields()
     .filter()
     .paginate();
@@ -61,9 +59,7 @@ const getAllReviewsFromDb = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 const getReviewsForProductFromDb = async (productId: string) => {
-  const result = await Review.find({ product: productId }).populate(
-    'reviewer product',
-  );
+  const result = await Review.find({ product: productId }).populate("reviewer product");
   return result;
 };
 // For bad review
@@ -75,14 +71,14 @@ const deleteReviewFromDb = async (id: string) => {
     // Find the review first
     const review = await Review.findById(id).session(session);
     if (!review) {
-      throw new AppError(404, 'Review not found');
+      throw new AppError(404, "Review not found");
     }
 
     // Remove the review reference from the associated product
     await Product.findByIdAndUpdate(
       review.product,
       { $pull: { reviews: new Types.ObjectId(id) } },
-      { session },
+      { session }
     );
 
     // Delete the review
@@ -101,11 +97,9 @@ const deleteReviewFromDb = async (id: string) => {
 const getMyReviewsFromDb = async (email: string) => {
   const isUserExist = await User.findOne({ email });
   if (!isUserExist) {
-    throw new AppError(404, 'User not found');
+    throw new AppError(404, "User not found");
   }
-  const result = await Review.find({ reviewer: isUserExist?._id }).populate(
-    'reviewer product',
-  );
+  const result = await Review.find({ reviewer: isUserExist?._id }).populate("reviewer product");
   return result;
 };
 export const reviewServices = {

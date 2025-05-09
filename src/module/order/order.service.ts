@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose, { Types } from "mongoose";
-import Medicine from "../medicines/products.model";
+import Medicine from "../products/products.model";
 import User from "../user/user.model";
 import Order from "./order.model";
 import { orderUtils } from "./order.utils"; // adjust path as needed
@@ -10,7 +10,7 @@ import QueryBuilder from "../../builder/QueryBuilder";
 import { sendMail } from "../../utilits/setMiail";
 import { sendLowStockMail } from "../../utilits/sentAdminEmail";
 import { sendConfirmOrderMail } from "../../utilits/sentOrderConfirmMiil";
-import { TProduct } from "../medicines/products.interface";
+import { TProduct } from "../products/products.interface";
 
 const createOrder = async (orderData: TOrder, client_ip: string) => {
   if (!orderData || orderData?.products?.length < 1) {

@@ -1,8 +1,10 @@
-import catchAsync from '../../utils/catchAsync';
-import sendResponse from '../../utils/sendResponse';
+
+
+import catchAsYnc from '../../utilits/catchAsync';
+import sendResponse from '../../utilits/sendResponse';
 import { reviewServices } from './review.service';
 
-const createReview = catchAsync(async (req, res) => {
+const createReview = catchAsYnc(async (req, res) => {
   const review = req.body;
   const result = await reviewServices.createReviewIntoDb(review);
   return sendResponse(res, {
@@ -12,7 +14,7 @@ const createReview = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const getAllReviews = catchAsync(async (req, res) => {
+const getAllReviews = catchAsYnc(async (req, res) => {
   const result = await reviewServices.getAllReviewsFromDb(req.query);
   return sendResponse(res, {
     statusCode: 200,
@@ -22,7 +24,7 @@ const getAllReviews = catchAsync(async (req, res) => {
     data: result.result,
   });
 });
-const getProductReviews = catchAsync(async (req, res) => {
+const getProductReviews = catchAsYnc(async (req, res) => {
   const { productId } = req.params;
   const result = await reviewServices.getReviewsForProductFromDb(productId);
   return sendResponse(res, {
@@ -32,7 +34,7 @@ const getProductReviews = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const deleteReview = catchAsync(async (req, res) => {
+const deleteReview = catchAsYnc(async (req, res) => {
   const { id } = req.params;
   const result = await reviewServices.deleteReviewFromDb(id);
   return sendResponse(res, {
@@ -42,7 +44,7 @@ const deleteReview = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const getMyReviews = catchAsync(async (req, res) => {
+const getMyReviews = catchAsYnc(async (req, res) => {
   const { email } = req.user || {};
   const result = await reviewServices.getMyReviewsFromDb(email);
   return sendResponse(res, {

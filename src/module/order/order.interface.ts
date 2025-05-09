@@ -1,4 +1,4 @@
-import { TProduct } from "../medicines/products.interface";
+import { TProduct } from "../products/products.interface";
 import { TUser } from "../user/user.interface";
 
 export interface TOrderProduct {
