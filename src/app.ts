@@ -7,6 +7,7 @@ import { OrderRoutes } from "./module/order/order.route";
 import { globalErrorHandler } from "./errors/GlobalErrorHandler";
 import { instrumentRoutes } from "./module/healthInstrument/instrument.routes";
 import { reviewRoutes } from "./module/reviews/review.route";
+import { ContactRoutes } from "./module/contactUs/contact.route";
 const app: Application = express();
 app.use(
   cors({
@@ -22,6 +23,7 @@ app.use("/api", medicineRoutes);
 app.use("/api", OrderRoutes);
 app.use("/api", reviewRoutes);
 app.use("/api", instrumentRoutes);
+app.use("/api", ContactRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World from Express and TypeScript");
