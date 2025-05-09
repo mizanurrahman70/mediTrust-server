@@ -1,9 +1,14 @@
 import { Schema, model } from "mongoose";
 
-const medicineSchema = new Schema({
+const productSchema = new Schema({
   name: {
     type: String,
     required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    enum: ["medicine", "instrument"],
   },
   description: {
     type: String,
@@ -14,10 +19,22 @@ const medicineSchema = new Schema({
     required: true,
   },
   quantity: { type: Number, required: true },
+
   requiredPrescription: {
     type: Boolean,
-    required: true,
   },
+  symptoms: {
+    type: String,
+  },
+  expiryDate: {
+    type: Date,
+  },
+
+  warrantyPeriod: { type: String },
+  brand: { type: String },
+  features: [{ type: String }],
+
+  usageInstructions: { type: String },
   manufacturerDetails: {
     name: {
       type: String,
@@ -32,17 +49,10 @@ const medicineSchema = new Schema({
       required: true,
     },
   },
-  symptoms: {
-    type: String,
-    required: true,
-  },
+
   image: { type: String, required: true },
-  expiryDate: {
-    type: Date,
-    required: true,
-  },
 });
 
-const Medicine = model("Medicine", medicineSchema);
+const Product = model("Product", productSchema);
 
-export default Medicine;
+export default Product;
